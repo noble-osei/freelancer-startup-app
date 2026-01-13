@@ -1,13 +1,50 @@
 import User from "../models/User.js";
 import asyncHandler from "../middleware/asyncHandler.js";
+import AppError from "../utils/appError.js";
+import { createAccessToken, createRefreshToken } from "../utils/jwtToken.js";
 
-export const signup = asyncHandler(async(req, res) => {
+export const signup = asyncHandler(async (req, res, next) => {
   const { name, username, email, password } = req.body;
+
+  const userFound = await User.findOne({ email: email });
+  if (userFound) return next(new AppError("Email already exists", 409));
 
   await User.create({ name, username, email, password });
 
-  res.status(201).json({
-    success: true,
-    message: "User has been successfully created"
-  })
+  res.status(201).json({ message: "User has been successfully created" })
 });
+
+export const login = asyncHandler(async (req, res) => {
+  const { usernameOrEmail, password, rememberMe } = req.body;
+  const emailFormat = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  let user;
+  if (emailFormat.text(usernameOrEmail)) {
+    user = await User.findOne({ email: usernameOrEmail })
+  } else {
+    user = await User.findOne({ username: usernameOrEmail })
+  };
+  if (!user) return next(new AppError("Invalid credentials", 400));
+
+  const isMatch = await User.comparePassword(password);
+  if (!isMatch) return next(new AppError("Invalid credentials", 400))
+
+  const accessToken = createAccessToken(user._id, user.role);
+  let refreshToken;
+  if (rememberMe) {
+    refreshToken = createRefreshToken(user._id, user.role);
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000
+    })
+  };
+
+  res
+    .cookie("accessToken", accessToken, {
+      httpOnly: true,
+      samesite: "strict",
+      maxAge: 15 * 60 * 1000
+    })
+    .json({ message: "Login successful"})
+})
