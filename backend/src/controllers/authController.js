@@ -6,8 +6,11 @@ import { createAccessToken, createRefreshToken } from "../utils/jwtToken.js";
 export const signup = asyncHandler(async (req, res, next) => {
   const { name, username, email, password } = req.body;
 
-  const userFound = await User.findOne({ email: email });
-  if (userFound) return next(new AppError("Email already exists", 409));
+  const userEmailFound = await User.findOne({ email: email });
+  if (userEmailFound) return next(new AppError("Email already exists", 409));
+
+  const usernameFound = await User.findOne({ username: username });
+  if (usernameFound) return next(new AppError("Username taken", 409));
 
   await User.create({ name, username, email, password });
 
@@ -19,14 +22,14 @@ export const login = asyncHandler(async (req, res) => {
   const emailFormat = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   let user;
-  if (emailFormat.text(usernameOrEmail)) {
+  if (emailFormat.test(usernameOrEmail)) {
     user = await User.findOne({ email: usernameOrEmail })
   } else {
     user = await User.findOne({ username: usernameOrEmail })
   };
   if (!user) return next(new AppError("Invalid credentials", 400));
 
-  const isMatch = await User.comparePassword(password);
+  const isMatch = await user.comparePassword(password);
   if (!isMatch) return next(new AppError("Invalid credentials", 400))
 
   const accessToken = createAccessToken(user._id, user.role);
@@ -47,4 +50,4 @@ export const login = asyncHandler(async (req, res) => {
       maxAge: 15 * 60 * 1000
     })
     .json({ message: "Login successful"})
-})
+});

@@ -1,7 +1,7 @@
 import AppError from "../utils/appError.js";
 
 export const notFound = (req, _, next) => {
-  return next(new AppError(`Not Found: ${req.originalUrl}`))
+  return next(new AppError(`Not Found: ${req.method} - ${req.originalUrl}`, 404))
 };
 
 export const errorMiddleware = (err, req, res, next) => {
@@ -9,7 +9,7 @@ export const errorMiddleware = (err, req, res, next) => {
   const message = err.message || "Internal Server Error";
 
   res.status(statusCode).json({
-    message
-    //...(process.env.NODE_ENV !== "production" && { stack: err.stack })
+    message,
+    ...(process.env.NODE_ENV !== "production" && { stack: err.stack })
   })
 }
