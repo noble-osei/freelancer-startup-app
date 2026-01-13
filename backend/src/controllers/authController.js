@@ -65,22 +65,30 @@ export const logout = (req, res) => {
 
 export const refresh = (req, res, next) => {
   const token = req.cookies.refreshToken;
-
   if (!token) return next(new AppError("Not authenticated", 401));
+  
+  res.clearCookie("refreshToken");
 
   try {
     const decoded = jwt.verify(token, process.env.SECRET_REFRESH_TOKEN);
 
     const accessToken = createAccessToken(decoded.id, decoded.role);
+    const refreshToken = createRefreshToken(decoded.id, decoded.role);
 
-    res.cookie("accessToken", accessToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 15 * 60 * 1000
-    });
-
-    return res.status(200).json({ message: "Access token refreshed" });
+    return res
+      .cookie("accessToken", accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000
+      })
+      .cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000
+      })
+      .json({ message: "Access token refreshed" });
   } catch (error) {
     return next(new AppError("Invalid or expired token", 401))
   };
