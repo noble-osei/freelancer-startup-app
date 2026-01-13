@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+
 import User from "../models/User.js";
 import asyncHandler from "../middleware/asyncHandler.js";
 import AppError from "../utils/appError.js";
@@ -17,7 +19,7 @@ export const signup = asyncHandler(async (req, res, next) => {
   res.status(201).json({ message: "User has been successfully created" })
 });
 
-export const login = asyncHandler(async (req, res) => {
+export const login = asyncHandler(async (req, res, next) => {
   const { usernameOrEmail, password, rememberMe } = req.body;
   const emailFormat = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -38,6 +40,7 @@ export const login = asyncHandler(async (req, res) => {
     refreshToken = createRefreshToken(user._id, user.role);
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000
     })
@@ -46,8 +49,39 @@ export const login = asyncHandler(async (req, res) => {
   res
     .cookie("accessToken", accessToken, {
       httpOnly: true,
-      samesite: "strict",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
       maxAge: 15 * 60 * 1000
     })
     .json({ message: "Login successful"})
 });
+
+export const logout = (req, res) => {
+  res
+    .clearCookie("accessToken")
+    .clearCookie("refreshToken")
+    .json({ message: "Logged out"})
+};
+
+export const refresh = (req, res, next) => {
+  const token = req.cookies.refreshToken;
+
+  if (!token) return next(new AppError("Not authenticated", 401));
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_REFRESH_TOKEN);
+
+    const accessToken = createAccessToken(decoded.id, decoded.role);
+
+    res.cookie("accessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000
+    });
+
+    return res.status(200).json({ message: "Access token refreshed" });
+  } catch (error) {
+    return next(new AppError("Invalid or expired token", 401))
+  };
+};
