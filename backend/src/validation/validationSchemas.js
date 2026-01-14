@@ -16,7 +16,8 @@ export const loginSchema = Joi.object({
 
 export const projectBodySchema = Joi.object({
   title: Joi.string().required(),
-  description: Joi.string()
+  description: Joi.string(),
+  owner: Joi.string().hex().length(24)
 });
 
 export const taskBodySchema = Joi.object({
