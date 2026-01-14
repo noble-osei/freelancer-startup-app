@@ -88,7 +88,7 @@ export const refresh = (req, res, next) => {
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000
       })
-      .json({ message: "Access token refreshed" });
+      .json({ message: "Token refreshed" });
   } catch (error) {
     return next(new AppError("Invalid or expired token", 401))
   };
