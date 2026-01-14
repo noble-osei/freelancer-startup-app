@@ -17,9 +17,9 @@ export const getProjects = asyncHandler(async (req, res) => {
   let projects;
 
   if (req.user.role === "user") {
-    projects = await Project.find({ owner: owner }).sort({ createdAt: -1 });
+    projects = await Project.find({ owner: owner });
   } else if (req.user.role === "admin") {
-    projects = await Project.find().sort({ createdAt: -1 });
+    projects = await Project.find();
   };
 
   res.json({ projects })
