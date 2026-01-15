@@ -5,8 +5,6 @@ import AppError from "../utils/appError.js";
 export const createProject = asyncHandler(async (req, res) => {
   const { title, description, owner } = req.body;
 
-  if (!owner) return next(new AppError("Project owner is required", 400))
-
   await Project.create({ title, description, owner });
 
   res.status(201).json({ message: "Project added successfully"})
@@ -22,35 +20,37 @@ export const getProjects = asyncHandler(async (req, res) => {
     projects = await Project.find();
   };
 
-  res.json({ projects })
+  res.json({ message: "Projects retrieved successfully", projects })
+});
+
+export const getProject = asyncHandler(async (req, res) => {
+  const { projectId } = req.params;
+
+  const project = await Project.findById({ _id: projectId, owner: req.user?.id });
+
+  res.json({ message: "Project retrieved successfully", project })
 });
 
 export const updateProject = asyncHandler(async (req, res) => {
-  const projectId = req.params?.id;
-  const { title, description } = req.body;
+  const { projectId } = req.params;
+  const updates = req.body;
 
-  const project = await Project.findById(projectId);
-
-  if (!project) {
-    throw new AppError("Project not found", 404)
-  };
-
-  if (req.user.role === "user") {
-    if (project.owner.toString() !== req.user.id) {
-      throw new AppError("Access denied - project not yours", 403)
+  const project = await Project.findByIdAndUpdate(
+    { _id: projectId, owner: req.user?.id },
+    { $set: updates },
+    {
+      new: true,
+      runValidators: true,
     }
-  };
+  );
 
-  project.title = title ?? project.title;
-  project.description = description ?? project.description;
-
-  await project.save();
+  if (!project) { throw new AppError("Project not found", 404) };
 
   res.json({ message: "Project updated successfully"});
 });
 
 export const deleteProject = asyncHandler(async (req, res) => {
-  const projectId = req.params?.id;
+  const { projectId } = req.params;
 
   await Project.findByIdAndDelete(projectId);
 
