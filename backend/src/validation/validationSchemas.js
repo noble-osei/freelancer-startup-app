@@ -26,6 +26,4 @@ export const taskBodySchema = Joi.object({
   status: Joi.string().valid("todo", "in Progress", "done").required()
 });
 
-export const idSchema = Joi.object({
-  id: Joi.string().hex().length(24).required()
-});
+export const idSchema = Joi.string().hex().length(24);
