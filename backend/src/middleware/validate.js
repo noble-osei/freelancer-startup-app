@@ -3,7 +3,7 @@ import AppError from "../utils/appError.js";
 class Validate {
   static body(schema) {
     return (req, res, next) => {
-      const { error } = schema.validate(req.body);
+      const { error } = schema.validate(req.body, { stripUnknown: true });
 
       if (error) return next(new AppError(error.details[0].message, 400));
 
@@ -15,7 +15,7 @@ class Validate {
     return (req, res, next) => {
       const { error } = schema.validate(req.params);
 
-      if (error) return next(new AppError(error.detail[0].message, 400));
+      if (error) return next(new AppError(error.details[0].message, 400));
 
       next()
     }
