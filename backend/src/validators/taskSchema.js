@@ -9,8 +9,7 @@ const taskFields = {
 
 export const createTaskBodySchema = Joi.object({
   ...taskFields,
-  title: taskFields.title.required(),
-  status: taskFields.status.required()
+  title: taskFields.title.required()
 });
 
 export const updateTaskBodySchema = Joi.object(taskFields).min(1);
