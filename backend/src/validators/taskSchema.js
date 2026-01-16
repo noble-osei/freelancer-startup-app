@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { objectId } from "./common.js";
 
 const taskFields = {
   title: Joi.string(),
@@ -13,3 +14,8 @@ export const createTaskBodySchema = Joi.object({
 });
 
 export const updateTaskBodySchema = Joi.object(taskFields).min(1);
+
+export const tasksIdParamsSchema = Joi.object({ 
+  projectId: objectId.required(),
+  taskId: objectId.required() 
+});
