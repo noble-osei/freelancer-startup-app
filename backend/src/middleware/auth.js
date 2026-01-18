@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 import AppError from "../utils/appError.js";
 
 const auth = (req, res, next) => {
-  const token = req.cookies.accessToken;
+  const token = req.cookies?.accessToken;
 
   if (!token) return next(new AppError("Not authenticated", 401));
 

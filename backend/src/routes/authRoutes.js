@@ -1,7 +1,7 @@
 import express from "express";
 
 import Validate from "../middleware/validate.js";
-import { loginSchema, signupSchema } from "../validation/validationSchemas.js";
+import { loginSchema, signupSchema } from "../validators/authSchema.js";
 import { login, logout, refresh, signup } from "../controllers/authController.js";
 import auth from "../middleware/auth.js";
 

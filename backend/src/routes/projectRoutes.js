@@ -14,7 +14,7 @@ import taskRoutes from "./taskRoutes/taskRoutes.js";
 
 const router = express.Router();
 
-router.use(auth());
+router.use(auth);
 
 router.route("/")
       .get(requireRole(["admin", "user"]), getProjects)
