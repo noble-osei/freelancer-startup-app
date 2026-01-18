@@ -1,9 +1,13 @@
 import asyncHandler from "../middleware/asyncHandler.js";
 import Project from "../models/Project.js";
+import User from "../models/User.js";
 import AppError from "../utils/appError.js";
 
 export const createProject = asyncHandler(async (req, res) => {
   const { title, description, owner } = req.body;
+  const user = await User.findById(owner);
+
+  if (!user) { throw new AppError("Owner user does not exist", 400)}
 
   await Project.create({ title, description, owner });
 
@@ -25,8 +29,15 @@ export const getProjects = asyncHandler(async (req, res) => {
 
 export const getProject = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
+  let project;
 
-  const project = await Project.findById({ _id: projectId, owner: req.user?.id });
+  if (req.user?.role === "user") {
+    project = await Project.findOne({ _id: projectId, owner: req.user?.id });
+  } else {
+    project = await Project.findById(projectId)
+  };
+
+  if (!project) { throw new AppError("Project not found", 404)}
 
   res.json({ message: "Project retrieved successfully", project })
 });
