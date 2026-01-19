@@ -2,9 +2,9 @@ import Joi from "joi";
 import { objectId } from "./common.js";
 
 const taskFields = {
-  title: Joi.string(),
-  description: Joi.string(),
-  status: Joi.string().valid("todo", "in Progress", "done")
+  title: Joi.string().min(3).max(100),
+  description: Joi.string().max(500),
+  status: Joi.string().valid("todo", "in-progress", "done")
 };
 
 export const createTaskBodySchema = Joi.object({
