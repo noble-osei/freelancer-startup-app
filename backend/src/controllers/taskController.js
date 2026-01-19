@@ -1,4 +1,5 @@
 import asyncHandler from "../middleware/asyncHandler.js";
+import Project from "../models/Project.js";
 import Task from "../models/Task.js";
 import AppError from "../utils/appError.js";
 
@@ -21,6 +22,9 @@ export const getTask = asyncHandler(async (req, res) => {
 export const createTask = asyncHandler(async (req, res) => {
   const { title, description } = req.body;
   const { projectId } = req.params;
+  const project = await Project.findById(projectId);
+  
+  if (!project) { throw new AppError("Project does not exist", 400)}
 
   await Task.create({ title, description, project: projectId });
 
