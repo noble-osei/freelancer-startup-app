@@ -1,8 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
+import SignupForm from '../components/SignupForm.jsx'
 
 function SignupPage() {
+
   return (
-    <div>SignupPage</div>
+    <div className='bg-base-200'>
+      <SignupForm />
+    </div>
   )
 }
 
