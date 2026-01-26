@@ -93,3 +93,7 @@ export const refresh = (req, res, next) => {
     return next(new AppError("Invalid or expired token", 401))
   };
 };
+
+export const me = (req, res) => {
+  res.json(req.user)
+};
