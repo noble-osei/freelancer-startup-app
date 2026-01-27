@@ -71,7 +71,7 @@ function LoginForm({ onSubmit }) {
                 type="checkbox"
                 name="rememberMe"
                 checked={formData.rememberMe}
-                onClick={() => setFormData({ ...formData, rememberMe: !formData.rememberMe })}
+                onChange={() => setFormData({ ...formData, rememberMe: !formData.rememberMe })}
               />
 
               <label className="label ml-1">
