@@ -95,5 +95,5 @@ export const refresh = (req, res, next) => {
 };
 
 export const me = (req, res) => {
-  res.json(req.user)
+  res.json({ role: req.user.role })
 };
