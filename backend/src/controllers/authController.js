@@ -53,7 +53,7 @@ export const login = asyncHandler(async (req, res, next) => {
       sameSite: "strict",
       maxAge: 15 * 60 * 1000
     })
-    .json({ message: "Login successful"})
+    .json({ role: user.role })
 });
 
 export const logout = (req, res) => {
