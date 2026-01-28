@@ -3,14 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 import LoginForm from '../components/LoginForm.jsx';
-import api from '../api/axios.js';
+import { useAuth } from "../context/authContext.jsx";
 
 function LoginPage() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleSubmit = async (data) => {
     try {
-      await api.post('/auth/login', data);
+      login(data);
       navigate('/dashboard');
     } catch (error) {
       const message = error.response?.data?.message || "Something went wrong. Try again!";
