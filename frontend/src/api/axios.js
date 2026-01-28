@@ -5,21 +5,27 @@ const api = axios.create({
   withCredentials: true
 });
 
-const refreshApi = axios.create({
-  baseURL: "http://localhost:5002/api",
-  withCredentials: true
-});
+const AUTH_ROUTES = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/me",
+  "/auth/refresh",
+  "/auth/logout",
+];
 
 api.interceptors.response.use(
-  (response) => response, async (error) => {
+  (response) => response, 
+  async (error) => {
     const originalRequest = error.config;
+    const isAuthRoute = AUTH_ROUTES.some(route =>
+      originalRequest.url.includes(route)
+    );
 
-    if (error.response?.status === 401 && !originalRequest._retry &&
-      originalRequest.url !== "/auth/refresh") {
+    if (error.response?.status === 401 && !originalRequest._retry && !isAuthRoute) {
       originalRequest._retry = true;
 
       try {
-        await refreshApi.post("/auth/refresh");
+        await api.post("/auth/refresh");
         return api(originalRequest);
       } catch (error) {
         window.location.href = "/login";
