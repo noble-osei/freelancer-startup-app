@@ -5,10 +5,8 @@ const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [ user, setUser ] = useState(null);
-  const [ loading, setLoading ] = useState(false);
-
+  const [ loading, setLoading ] = useState(true);
   const fetchUser = async () => {
-    setLoading(true);
     try {
       const res = await api.get("/auth/me");
       setUser(res.data);
@@ -30,17 +28,16 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     await api.post("/auth/logout");
-    setUser(null)
-    window.location.href = "/login";
+    setUser(null);
   };
 
   const value = {
-    user, loading, login, logout, isAuthenticated: !!user
+    user, loading, login, logout
   }
 
   return (
     <AuthContext.Provider value={value}>
-      {loading? null: children}
+      { children }
     </AuthContext.Provider>
   )
 };
