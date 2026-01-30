@@ -11,7 +11,7 @@ function LoginPage() {
 
   const handleSubmit = async (data) => {
     try {
-      login(data);
+      await login(data);
       navigate('/dashboard');
     } catch (error) {
       const message = error.response?.data?.message || "Something went wrong. Try again!";
