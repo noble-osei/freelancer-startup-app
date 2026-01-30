@@ -51,7 +51,7 @@ function LoginForm({ onSubmit }) {
                 type={showPassword? "text": "password"}
                 name='password'
                 className='input input-bordered w-full'
-                placeholder='Create Password'
+                placeholder='Password'
                 value={formData.password}
                 onChange={handleChange}
                 required
