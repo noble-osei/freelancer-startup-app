@@ -19,8 +19,9 @@ router.route("/")
   .post(Validate.params(projectIdParamsSchema), Validate.body(createTaskBodySchema), createTask );
 
 router.route("/:taskId")
-  .get(Validate.params(tasksIdParamsSchema), getTask )
-  .patch(Validate.params(tasksIdParamsSchema), Validate.body(updateTaskBodySchema), updateTask)
-  .delete(Validate.params(tasksIdParamsSchema), deleteTask);
+  .get(Validate.params(projectIdParamsSchema), Validate.params(tasksIdParamsSchema), getTask )
+  .patch(Validate.params(projectIdParamsSchema), Validate.params(tasksIdParamsSchema), 
+    Validate.body(updateTaskBodySchema), updateTask)
+  .delete(Validate.params(projectIdParamsSchema), Validate.params(tasksIdParamsSchema), deleteTask);
 
 export default router

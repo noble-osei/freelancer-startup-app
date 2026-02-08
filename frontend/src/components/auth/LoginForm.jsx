@@ -2,7 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-function LoginForm({ onSubmit }) {
+function LoginForm({ onSubmit, loading }) {
   const [ formData, setFormData ] = useState({
     usernameOrEmail: "",
     password: "",
@@ -79,8 +79,8 @@ function LoginForm({ onSubmit }) {
               </label>
             </div>
 
-            <button type="submit" className='btn btn-primary w-full'>
-              Login
+            <button type="submit" className='btn btn-primary w-full' disabled={loading}>
+              {loading? (<span className='loading loading-spinner'></span>): "Login"}
             </button>
 
             <p className='text-center text-base-content/70'>

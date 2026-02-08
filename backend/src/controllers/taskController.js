@@ -28,7 +28,7 @@ export const createTask = asyncHandler(async (req, res) => {
 
   await Task.create({ title, description, project: projectId });
 
-  res.json({ message: "Task created successfully"})
+  res.status(201).json({ message: "Task created successfully"})
 });
 
 export const updateTask = asyncHandler(async (req, res) => {

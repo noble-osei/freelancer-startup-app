@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useAuth } from '../context/authContext.jsx'
+import { useAuth } from '../../context/authContext.jsx'
 import { Outlet, Navigate } from 'react-router-dom'
 
 function ProtectedRoute() {

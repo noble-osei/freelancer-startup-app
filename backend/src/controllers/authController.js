@@ -97,3 +97,9 @@ export const refresh = (req, res, next) => {
 export const me = (req, res) => {
   res.json({ role: req.user.role })
 };
+
+export const users = asyncHandler(async (req, res) => {
+  const users = await User.find().select("username role");
+
+  res.json({users});
+})

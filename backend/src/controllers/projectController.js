@@ -2,6 +2,7 @@ import asyncHandler from "../middleware/asyncHandler.js";
 import Project from "../models/Project.js";
 import User from "../models/User.js";
 import AppError from "../utils/appError.js";
+import Task from "../models/Task.js";
 
 export const createProject = asyncHandler(async (req, res) => {
   const { title, description, owner } = req.body;
@@ -19,9 +20,11 @@ export const getProjects = asyncHandler(async (req, res) => {
   let projects;
 
   if (req.user.role === "user") {
-    projects = await Project.find({ owner: owner });
+    projects = await Project.find({ owner: owner })
+      .populate("owner", "name username");
   } else if (req.user.role === "admin") {
-    projects = await Project.find();
+    projects = await Project.find()
+      .populate("owner", "name username");
   };
 
   res.json({ message: "Projects retrieved successfully", projects })
@@ -64,6 +67,8 @@ export const deleteProject = asyncHandler(async (req, res) => {
   const { projectId } = req.params;
 
   await Project.findByIdAndDelete(projectId);
+
+  await Task.deleteMany({ project: projectId})
 
   res.json({ message: "Project deleted"})
 });
