@@ -67,10 +67,9 @@ export const refresh = (req, res, next) => {
   const token = req.cookies.refreshToken;
   if (!token) return next(new AppError("Not authenticated", 401));
   
-  res.clearCookie("refreshToken");
-
   try {
     const decoded = jwt.verify(token, process.env.SECRET_REFRESH_TOKEN);
+    res.clearCookie("refreshToken");
 
     const accessToken = createAccessToken(decoded.id, decoded.role);
     const refreshToken = createRefreshToken(decoded.id, decoded.role);
