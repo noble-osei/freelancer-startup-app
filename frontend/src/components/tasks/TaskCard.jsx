@@ -1,13 +1,13 @@
 import React from 'react'
 import toast from "react-hot-toast"
 
-import { deleteTask, updateTask } from '../../api/tasksApi.js';
+import { deleteTaskApi, updateTaskApi } from '../../api/tasksApi.js';
 import TaskFormModal from './TaskFormModal.jsx';
 
 function TasksCard({ projectId, task, getData }) {
   const handleTaskUpdate = async (formData) => {
     try {
-      const data = await updateTask(projectId, task._id, formData);
+      const data = await updateTaskApi(projectId, task._id, formData);
       toast.success(data.message);
       getData();
     } catch (error) {
@@ -20,7 +20,7 @@ function TasksCard({ projectId, task, getData }) {
     if (!window.confirm("Are you sure you want to delete this task?")) return;
 
     try {
-      const data = await deleteTask(projectId, task._id);
+      const data = await deleteTaskApi(projectId, task._id);
       toast.success(data.message);
       getData();
     } catch (error) {

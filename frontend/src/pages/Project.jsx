@@ -2,11 +2,10 @@ import React, { useEffect, useState } from 'react'
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast'
 
-import { deleteProject, fetchProject, updateProject } from '../api/projectsApi.js';
-import { fetchTasks, createTask } from '../api/tasksApi.js';
+import { deleteProjectApi, fetchProjectApi, updateProjectApi } from '../api/projectsApi.js';
+import { fetchTasksApi, createTaskApi } from '../api/tasksApi.js';
 import Navbar from '../components/common/Navbar.jsx';
 import TasksCard from '../components/tasks/TaskCard.jsx';
-import CreateTask from '../components/tasks/TaskFormModal.jsx';
 import { useAuth } from '../context/authContext.jsx';
 import ProjectFormModal from '../components/projects/ProjectFormModal.jsx';
 import TaskFormModal from '../components/tasks/TaskFormModal.jsx';
@@ -22,10 +21,10 @@ function ProjectPage() {
 
   async function getData() {
     try {
-      const data = await fetchProject(projectId);
+      const data = await fetchProjectApi(projectId);
       setProject(data.project)
 
-      const data1 = await fetchTasks(projectId);
+      const data1 = await fetchTasksApi(projectId);
       setTasks(data1.tasks)
     } catch (error) {
       toast.error("Error: " + error.message)
@@ -40,7 +39,7 @@ function ProjectPage() {
 
   const handleSubmit = async (formData) => {
     try {
-      const data = await createTask(projectId, formData);
+      const data = await createTaskApi(projectId, formData);
       toast.success(data.message);
       getData()
     } catch (error) {
@@ -51,7 +50,7 @@ function ProjectPage() {
 
   const handleProjectUpdate = async (formData) => {
     try {
-      const data = await updateProject(projectId, formData);
+      const data = await updateProjectApi(projectId, formData);
       toast.success(data.message);
       getData();
     } catch (error) {
@@ -64,7 +63,7 @@ function ProjectPage() {
     if (!window.confirm("Are you sure you want to delete this project?")) return;
 
     try {
-      const data = await deleteProject(project._id);
+      const data = await deleteProjectApi(project._id);
       toast.success(data.message);
       navigate("/dashboard", { replace: true })
     } catch (error) {

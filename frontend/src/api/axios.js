@@ -34,7 +34,7 @@ api.interceptors.response.use(
 
     if (refreshFailed) {
       return Promise.reject(error);
-    }
+    };
 
     const isAuthRoute = AUTH_ROUTES.some(route =>
       originalRequest?.url?.includes(route)
@@ -44,7 +44,8 @@ api.interceptors.response.use(
       if (isRefreshing) {
         return new Promise((resolve, reject) => {
           failedQueue.push({ resolve, reject });
-        }).then(() => api(originalRequest));
+        }).then(() => api(originalRequest))
+          .catch(err => Promise.reject(err));
       }
       
       originalRequest._retry = true;
@@ -52,13 +53,20 @@ api.interceptors.response.use(
 
       try {
         await api.post("/auth/refresh");
+
         isRefreshing = false;
         processQueue();
+
         return api(originalRequest);
       } catch(err) {
         isRefreshing = false;
         refreshFailed = true;
         processQueue(err);
+        
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        };
+        
         return Promise.reject(err);
       }
     }

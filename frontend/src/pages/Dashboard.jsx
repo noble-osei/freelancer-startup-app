@@ -2,34 +2,27 @@ import React, { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
 import Navbar from '../components/common/Navbar.jsx';
-import { createProject, fetchProjects } from '../api/projectsApi.js';
+import { createProjectApi } from '../api/projectsApi.js';
 import ProjectCard from '../components/projects/ProjectCard.jsx';
 import { useAuth } from '../context/authContext.jsx';
 import ProjectFormModal from '../components/projects/ProjectFormModal.jsx';
+import useProjects from '../hooks/useProjects.jsx';
 
 function Dashboard() {
-  const [projects, setProjects] = useState([]);
-  const [loading, setLoading] = useState(true);
   const { user } = useAuth();
-
-  async function getData() {
-    try {
-      const data = await fetchProjects();
-      setProjects(data.projects)
-    } catch (error) {
-      toast.error("Error: " + error.message)
-    } finally {
-      setLoading(false)
-    }
-  };
+  const { projects, loading, error, fetchProjects } = useProjects();
 
   useEffect(() => {
-    getData()
+    fetchProjects();
   }, []);
+
+  useEffect(() => {
+    if (error) toast.error(error)
+  }, [error]);
 
   const handleSubmit = async (formData) => {
     try {
-      const data = await createProject(formData);
+      const data = await createProjectApi(formData);
       toast.success(data.message);
       getData();
     } catch (error) {
