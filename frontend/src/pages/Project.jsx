@@ -43,7 +43,7 @@ function ProjectPage() {
       toast.success(data.message);
       getData()
     } catch (error) {
-      const message = error.response.data.message || "Something went wrong. Try Again!"
+      const message = error.message || "Something went wrong. Try Again!"
       toast.error(message);
     }
   };
@@ -54,7 +54,7 @@ function ProjectPage() {
       toast.success(data.message);
       getData();
     } catch (error) {
-      const message = error.response?.data?.message || "Something went wrong. Try again!";
+      const message = error.message || "Something went wrong. Try again!";
       toast.error(message);
     }
   };
@@ -67,7 +67,7 @@ function ProjectPage() {
       toast.success(data.message);
       navigate("/", { replace: true })
     } catch (error) {
-      const message = error.response?.data?.message || "Something went wrong. Try again!";
+      const message = error.message || "Something went wrong. Try again!";
       toast.error(message);
     }
   };

@@ -16,7 +16,7 @@ function LoginPage() {
       await login(data);
       navigate('/');
     } catch (error) {
-      const message = error.response?.data?.message || "Something went wrong. Try again!";
+      const message = error.message || "Something went wrong. Try again!";
       toast.error(message);
     } finally { setLoading(false) }
   };

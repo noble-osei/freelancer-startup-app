@@ -53,7 +53,7 @@ function ProjectFormModal({ onSubmit, projectData = null }) {
       await onSubmit(formData);
       modalRef.current?.close();
     } catch (error) {
-      console.error(error)
+      console.error(error.message)
     } finally { 
       setFormData({
         title: "",

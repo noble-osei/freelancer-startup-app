@@ -24,7 +24,7 @@ function Dashboard() {
     try {
       const data = await createProjectApi(formData);
       toast.success(data.message);
-      getData();
+      fetchProjects();
     } catch (error) {
       const message = error.response?.data?.message || "Something went wrong. Try again!";
       toast.error(message);
