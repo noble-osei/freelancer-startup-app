@@ -65,7 +65,7 @@ function ProjectPage() {
     try {
       const data = await deleteProjectApi(project._id);
       toast.success(data.message);
-      navigate("/dashboard", { replace: true })
+      navigate("/", { replace: true })
     } catch (error) {
       const message = error.response?.data?.message || "Something went wrong. Try again!";
       toast.error(message);
@@ -77,7 +77,7 @@ function ProjectPage() {
       <Navbar />
       <div className='max-w-5xl mx-auto mt-8'>
         <div className='flex items-center justify-between px-6'>
-          <Link to={"/dashboard"} className='btn btn-ghost'>Back to Projects</Link>
+          <Link to={"/"} className='btn btn-ghost'>Back to Projects</Link>
 
           <TaskFormModal
             onSubmit={handleSubmit}

@@ -14,7 +14,7 @@ function LoginPage() {
     setLoading(true)
     try {
       await login(data);
-      navigate('/dashboard');
+      navigate('/');
     } catch (error) {
       const message = error.response?.data?.message || "Something went wrong. Try again!";
       toast.error(message);
