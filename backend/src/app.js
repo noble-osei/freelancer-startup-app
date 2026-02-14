@@ -9,7 +9,7 @@ import projectRoutes from "./routes/projectRoutes.js";
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:4002",
+  origin: "https://freelancer-startup-app.vercel.app",
   credentials: true
 }));
 app.use(express.json());
