@@ -12,7 +12,7 @@ function useProjects() {
       const data = await fetchProjectsApi();
       setProjects(data.projects);
     } catch (error) {
-      setError(error.message);
+      setError(error.response?.data?.message);
     } finally {
       setLoading(false)
     }

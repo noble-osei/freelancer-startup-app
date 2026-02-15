@@ -28,8 +28,8 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (credentials) => {
-    const res = await api.post("/auth/login", credentials);
-    setUser(res.data);
+    await api.post("/auth/login", credentials);
+    fetchUser()
   };
 
   const logout = async () => {

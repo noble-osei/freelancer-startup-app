@@ -27,7 +27,7 @@ function ProjectPage() {
       const data1 = await fetchTasksApi(projectId);
       setTasks(data1.tasks)
     } catch (error) {
-      toast.error("Error: " + error.message)
+      toast.error("Error: " + error.response?.data?.message)
     } finally {
       setLoading(false)
     }
@@ -43,7 +43,7 @@ function ProjectPage() {
       toast.success(data.message);
       getData()
     } catch (error) {
-      const message = error.message || "Something went wrong. Try Again!"
+      const message = error.response?.data?.message || "Something went wrong. Try Again!"
       toast.error(message);
     }
   };
@@ -54,7 +54,7 @@ function ProjectPage() {
       toast.success(data.message);
       getData();
     } catch (error) {
-      const message = error.message || "Something went wrong. Try again!";
+      const message = error.response?.data?.message || "Something went wrong. Try again!";
       toast.error(message);
     }
   };
@@ -67,7 +67,7 @@ function ProjectPage() {
       toast.success(data.message);
       navigate("/", { replace: true })
     } catch (error) {
-      const message = error.message || "Something went wrong. Try again!";
+      const message = error.response?.data?.message || "Something went wrong. Try again!";
       toast.error(message);
     }
   };

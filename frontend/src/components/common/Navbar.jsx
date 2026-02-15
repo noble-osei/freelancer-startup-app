@@ -9,7 +9,7 @@ function Navbar() {
     try {
       await logout();
     } catch (error) {
-      console.error("Logout failed:", error)
+      console.error("Logout failed:", error.response?.data?.message)
     }
   }
 
